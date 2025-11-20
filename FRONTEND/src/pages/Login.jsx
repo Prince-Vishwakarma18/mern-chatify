@@ -6,6 +6,8 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setAuthUser, setSelectedUser } from '../redux/userSlice';
+import api from "../api/axios.js";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -14,14 +16,16 @@ function Login() {
   const [user, setUser] = useState({
     username: "",
     password: "",
-  });
+  }); 
+  console.log("BASE_URL:", api.defaults.baseURL);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log("login data sending", user);
 
     try {
-      const res = await axios.post("http://localhost:8080/api/users/login", user, {
+      const res = await api.post(`/users/login`, user, {
         headers: {
           "Content-Type": "application/json",
         },

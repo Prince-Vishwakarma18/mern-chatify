@@ -1,7 +1,9 @@
-import axios from "axios";
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {setMessages} from '../redux/messageSlice.js'
+import api from "../api/axios.js";
+
 const useGetMessages = () => {
     const dispatch = useDispatch();
     const { selectedUser } = useSelector((store) => store.user);
@@ -14,8 +16,8 @@ const useGetMessages = () => {
                  return; 
              }
             try {
-                const res = await axios.get(
-                    `http://localhost:8080/api/messages/${selectedUser._id}`,
+                const res = await api.get(
+                    `/messages/${selectedUser._id}`,
                     { withCredentials: true }
                 );
                 const msgs = res.data.messages

@@ -6,6 +6,8 @@ import { TbLockPassword } from "react-icons/tb";
 import { BsGenderAmbiguous } from "react-icons/bs";
 import toast from "react-hot-toast";
 import axios from "axios";
+import api from "../api/axios.js";
+
 
 function Signup() {
     const navigate = useNavigate();
@@ -29,8 +31,7 @@ function Signup() {
         formData.append("profilePhoto", user.profilePhoto); // file
 
         try {
-            const res = await axios.post(
-                "http://localhost:8080/api/users/register",
+            const res = await api.post(`cd /users/register`,
                 formData,
                 {
                     headers: { "Content-Type": "multipart/form-data" },

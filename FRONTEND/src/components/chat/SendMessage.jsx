@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { BsPaperclip } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { setMessages } from "../../redux/messageSlice";
-
+import api from "../../api/axios.js";
 function SendMessage() {
     const [message, setMessage] = useState("");
     const [image, setImage] = useState(null);
@@ -27,8 +26,8 @@ function SendMessage() {
             if (message) formData.append("message", message);
             if (image) formData.append("image", image);
 
-            const res = await axios.post(
-                `http://localhost:8080/api/messages/send/${selectedUser._id}`,
+            const res = await api.post(
+                `/messages/send/${selectedUser._id}`,
                 formData,
                 {
                     withCredentials: true,

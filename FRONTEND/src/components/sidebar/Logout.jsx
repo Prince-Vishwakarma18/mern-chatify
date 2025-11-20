@@ -1,9 +1,9 @@
 import React from 'react'
-import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setAuthUser } from '../../redux/userSlice.js';
+import api from "../../api/axios.js";
 
 function Logout() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function Logout() {
   const logoutHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/api/users/logout", {
+      const res = await api.post(`/users/logout`, {
         withCredentials: true,
       });
       navigate('/login')
