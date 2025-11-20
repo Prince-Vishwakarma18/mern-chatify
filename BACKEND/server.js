@@ -7,11 +7,14 @@ import userRoutes from "./routes/userRoute.js";
 import messageRoutes from "./routes/messageRoute.js";
 import { app, server } from "./socket/socket.js";
 import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 connectDB();
 const PORT = process.env.PORT || 3000;
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 // Middleware
 app.use("/uploads", express.static("uploads"));
