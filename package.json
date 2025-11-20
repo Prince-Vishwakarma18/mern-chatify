@@ -1,28 +1,22 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "Prince Vishwakarma",
-  "type": "module",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "cloudinary": "^1.41.3",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.3",
-    "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0",
-    "socket.io": "^4.8.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.11"
-  }
+    "name": "chatify",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "npm install --prefix BACKEND && npm install --prefix FRONTEND && npm run build --prefix FRONTEND",
+        "start": "npm install --prefix BACKEND && npm run start --prefix BACKEND"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Prince-Vishwakarma18/mern-chatify.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/Prince-Vishwakarma18/mern-chatify/issues"
+    },
+    "homepage": "https://github.com/Prince-Vishwakarma18/mern-chatify#readme"
 }

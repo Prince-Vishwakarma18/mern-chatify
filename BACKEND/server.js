@@ -5,44 +5,47 @@ import cookieParser from "cookie-parser";
 import connectDB from "./config/database.js";
 import userRoutes from "./routes/userRoute.js";
 import messageRoutes from "./routes/messageRoute.js";
-import{app, server} from "./socket/socket.js"
+import { app, server } from "./socket/socket.js";
 import path from "path";
 
 dotenv.config();
 connectDB();
 const PORT = process.env.PORT || 3000;
-const __dirname = path.resolve()
+const __dirname = path.resolve();
 
 // Middleware
 app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-//Frontend
+
+//Frontend (for local dev)
 app.use(
     cors({
-        origin: "http://localhost:5173", 
+        origin: "http://localhost:5173",
         credentials: true,
     })
 );
+
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/messages", messageRoutes);
+
 // Default route
 app.get("/", (req, res) => {
     res.send("Chatify is running");
 });
+
 // -----------------DEPLOYMENT-----------------
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../FRONTEND/dist")));
+    const frontendPath = path.join(__dirname, "../FRONTEND/dist");
 
-    app.get(/.*/, (req, res) => {
-        res.sendFile(path.join(__dirname, "../FRONTEND/dist/index.html"));
+    app.use(express.static(frontendPath));
+
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(frontendPath, "index.html"));
     });
 }
-
-
-
 
 // Start server
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
