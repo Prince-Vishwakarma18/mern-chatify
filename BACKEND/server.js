@@ -10,6 +10,8 @@ import path from "path";
 
 dotenv.config();
 connectDB();
+const PORT = process.env.PORT || 3000;
+const __dirname = path.resolve()
 
 // Middleware
 app.use("/uploads", express.static("uploads"));
@@ -30,7 +32,15 @@ app.use("/api/messages", messageRoutes);
 app.get("/", (req, res) => {
     res.send("Chatify is running");
 });
+// -----------------DEPLOYMENT-----------------
+if (process.env.NODE_ENV=="production") {
+    app.use(express.static(path.join(__dirname,"../FRONTEND/dist")));
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../FRONTEND","dist","index.html"));
+    })
+}
+
+
 
 // Start server
-const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
