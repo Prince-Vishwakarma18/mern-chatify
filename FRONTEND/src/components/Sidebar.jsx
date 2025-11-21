@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import Searchbar from './Searchbar.jsx';
-import OtherUsers from '../chat/OtherUsers.jsx';
-import Logout from './Logout.jsx';
-import useGetOtherUsers from '../../hooks/useGetOtherUsers.js';
+import Searchbar from './Searchbar';
+import OtherUsers from './OtherUsers';
+import Logout from './Logout';
+import useGetOtherUsers from '../hooks/useGetOtherUsers.js';
 import { useSelector } from 'react-redux';
+// import useGetMessages from '../hooks/useGetMessages.js';
 
 function Sidebar() {
     useGetOtherUsers();
     const { otherUsers } = useSelector((store) => store.user);
     const [search, setSearch] = useState("");
 
-    // filter
+    // Safe filter logic
     const filteredUsers = (otherUsers || []).filter((user) =>
         user.fullName.toLowerCase().includes((search || "").toLowerCase())
     );

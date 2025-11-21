@@ -9,13 +9,11 @@ const useGetRealTimeMessage = () => {
 
     useEffect(() => {
         if (!socket) return;
-
         const handleNewMessage = (newMessage) => {
             dispatch(setMessages([...messages, newMessage]));
         };
 
         socket.on("newMessage", handleNewMessage);
-
         return () => {
             socket.off("newMessage", handleNewMessage);
         };

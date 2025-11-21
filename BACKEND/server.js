@@ -9,7 +9,6 @@ import { app, server } from "./socket/socket.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -41,7 +40,6 @@ const frontendPath = path.join(__dirname, "../FRONTEND/dist");
 
 app.use(express.static(frontendPath));
 
-// ⚠️ Express v5 wildcard FIX — no "*" allowed
 app.use((req, res) => {
     res.sendFile(path.join(frontendPath, "index.html"));
 });

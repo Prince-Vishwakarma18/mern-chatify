@@ -14,7 +14,6 @@ const io = new Server(server, {
     },
 });
 
-// keep map above function
 const userSocketMap = {}; // {userId: socketId}
 
 export const getReceiverSocketId = (receiverId) => {

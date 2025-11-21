@@ -8,52 +8,58 @@ import { useDispatch, useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { setSocket, clearSocket } from './redux/socketSlice';
 import { setOnlineUser } from './redux/userSlice';
+import { BASE_URL } from './baseURL.js';
 
 const router = createBrowserRouter([
-  {path:"/",element:<Login />},
+  { path: "/", element: <Login /> },
   { path: "/home", element: <HomePage /> },
   { path: "/signup", element: <Signup /> },
   { path: "/login", element: <Login /> },
 ]);
 
 function App() {
+
   const dispatch = useDispatch();
   const authUser = useSelector((store) => store.user.authUser);
   const socket = useSelector((store) => store.socket.socket);
 
   useEffect(() => {
-    if (!authUser) {
-      // LOGOUT
-      if (socket) socket.close();
+    if (!authUser || !authUser._id) {
+      if (socket) {
+        console.log("Disconnecting socket because no authUser...");
+        socket.disconnect();
+      }
       dispatch(clearSocket());
       return;
     }
 
-    // login case: always create a NEW socket
-    const socketIo = io("http://localhost:3000", {
-      query: { userId: authUser._id },
-    });
+    if (!socket) {
+      console.log("Connecting socket to:", BASE_URL);
 
-    dispatch(setSocket(socketIo));
+      const socketIo = io(BASE_URL, {
+        transports: ["websocket"], 
+        query: { userId: authUser._id },
+        withCredentials: true,
+      });
 
-    // online user listener
-    const handleOnlineUsers = (users) => {
-      dispatch(setOnlineUser(users));
-    };
+      socketIo.on("connect", () => {
+        console.log(" SOCKET CONNECTED:", socketIo.id);
+      });
 
-    socketIo.on("getOnlineUsers", handleOnlineUsers);
+      socketIo.on("connect_error", (err) => {
+        console.log(" SOCKET ERROR:", err);
+      });
 
-    // cleanup
-    return () => {
-      socketIo.off("getOnlineUsers", handleOnlineUsers);
-      socketIo.close();
-    };
+      socketIo.on("getOnlineUsers", (users) => {
+        console.log("ONLINE USERS:", users);
+        dispatch(setOnlineUser(users));
+      });
 
-  }, [authUser]);
+      dispatch(setSocket(socketIo));
+    }
+  }, [authUser?._id]);
 
-  return (
-    <RouterProvider router={router} />
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

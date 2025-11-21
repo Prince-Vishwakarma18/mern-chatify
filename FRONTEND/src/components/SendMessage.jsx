@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { IoSend } from "react-icons/io5";
-import { BsPaperclip } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
-import { setMessages } from "../../redux/messageSlice";
-import axiosInstance from "../../api/axios";
+import axios from "axios";
+import { setMessages } from "../redux/messageSlice.js";
+import { BsPaperclip } from "react-icons/bs";
 
 function SendMessage() {
     const [message, setMessage] = useState("");
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState(null); 
 
     const dispatch = useDispatch();
+
     const { selectedUser, authUser } = useSelector((store) => store.user);
     const { messages = [] } = useSelector((store) => store.message);
 
     const handleMediaUpload = (e) => {
         const file = e.target.files[0];
         setImage(file);
+        console.log("Selected Image:", file);
     };
 
     const handleSend = async (e) => {
@@ -25,19 +27,19 @@ function SendMessage() {
         try {
             const formData = new FormData();
             if (message) formData.append("message", message);
-            if (image) formData.append("image", image);
+            if (image) formData.append("image", image); 
 
-            const res = await axiosInstance.post(
-                `/messages/send/${selectedUser._id}`,
+            const res = await axios.post(
+                `http://localhost:8080/api/messages/send/${selectedUser._id}`,
                 formData,
                 {
                     withCredentials: true,
                     headers: { "Content-Type": "multipart/form-data" },
                 }
             );
-
+            console.log("Message Response:", res.data);
             dispatch(setMessages([...messages, res.data.newMessage]));
-
+            // Reset input
             setMessage("");
             setImage(null);
         } catch (error) {
@@ -47,23 +49,20 @@ function SendMessage() {
 
     return (
         <div className="w-full bg-white p-2 border-t border-gray-300">
-            {image && (
-                <div>
-                    <img
-                        src={URL.createObjectURL(image)}
-                        alt="preview"
-                        className="w-32 h-32 object-cover rounded-md"
-                    />
-                </div>
-            )}
             <form onSubmit={handleSend} className="flex items-center gap-2">
-                {/* MEDIA UPLOAD */}
-                <label htmlFor="mediaInput" className="cursor-pointer text-3xl text-gray-700 hover:text-black">
+
+                {/* MEDIA UPLOAD BUTTON */}
+                <label
+                    htmlFor="mediaInput"
+                    className="cursor-pointer text-3xl text-gray-700 hover:text-black"
+                >
                     <BsPaperclip />
                 </label>
+
                 <input
                     type="file"
                     id="mediaInput"
+                    name="image" 
                     accept="image/*"
                     className="hidden"
                     onChange={handleMediaUpload}
@@ -79,12 +78,14 @@ function SendMessage() {
                 />
 
                 {/* SEND BUTTON */}
-                <button type="submit" className="text-blue-600 text-3xl hover:text-blue-800 transition-all">
+                <button
+                    type="submit"
+                    className="text-blue-600 text-3xl hover:text-blue-800 transition-all"
+                >
                     <IoSend />
                 </button>
+
             </form>
-
-
         </div>
     );
 }
