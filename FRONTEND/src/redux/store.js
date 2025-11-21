@@ -1,7 +1,7 @@
-import { combineReducers, configureStore} from '@reduxjs/toolkit'
-import userReducer from './userSlice.js'
-import messageReducer from './messageSlice.js'
-import socketReducer from './socketSlice.js'
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import userReducer from "./userSlice.js";
+import messageReducer from "./messageSlice.js";
+import socketReducer from "./socketSlice.js";
 import {
     persistReducer,
     FLUSH,
@@ -17,19 +17,16 @@ const persistConfig = {
     key: "root",
     version: 1,
     storage,
+    blacklist: ["socket"], // DO NOT persist socket
 };
 
-const rootReducer=combineReducers(
-    {
+const rootReducer = combineReducers({
     user: userReducer,
     message: messageReducer,
     socket: socketReducer,
-} 
-)
+});
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-
 
 const store = configureStore({
     reducer: persistedReducer,
@@ -43,7 +40,10 @@ const store = configureStore({
                     PERSIST,
                     PURGE,
                     REGISTER,
+                    "socket/setSocket", 
+                    "socket/clearSocket",
                 ],
+                ignoredPaths: ["socket.socket"], // ignore state path
             },
         }),
 });
