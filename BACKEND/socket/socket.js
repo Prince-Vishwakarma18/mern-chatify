@@ -7,14 +7,13 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:3000", "http://localhost:5173"],
+        origin:"*",
         methods: ["GET", "POST"],
         credentials: true,
-        transports: ["websocket", "polling"],
     },
 });
 
-const userSocketMap = {}; // {userId: socketId}
+const userSocketMap = {}; // { userId: socketId }
 
 export const getReceiverSocketId = (receiverId) => {
     return userSocketMap[receiverId];
@@ -25,9 +24,12 @@ io.on("connection", (socket) => {
 
     const userId = socket.handshake.query.userId;
 
-    if (userId) {
-        userSocketMap[userId] = socket.id;
+    if (!userId) {
+        console.log(" No userId received for socket:", socket.id);
+        return;
     }
+
+    userSocketMap[userId] = socket.id;
 
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
