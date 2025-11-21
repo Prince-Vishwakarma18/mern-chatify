@@ -10,7 +10,8 @@ import { setSocket, clearSocket } from './redux/socketSlice';
 import { setOnlineUser } from './redux/userSlice';
 
 const router = createBrowserRouter([
-  { path: "/", element: <HomePage /> },
+  {path:"/",element:<Login />},
+  { path: "/home", element: <HomePage /> },
   { path: "/signup", element: <Signup /> },
   { path: "/login", element: <Login /> },
 ]);
@@ -51,9 +52,7 @@ function App() {
   }, [authUser]);
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <RouterProvider router={router} />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

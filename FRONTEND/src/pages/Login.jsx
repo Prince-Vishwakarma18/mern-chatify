@@ -36,7 +36,7 @@ function Login() {
         dispatch(setAuthUser(res.data.user));
         dispatch(setSelectedUser(null));
         toast.success(res.data.message);
-        navigate("/");
+        navigate("/home");
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
